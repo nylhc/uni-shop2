@@ -1,9 +1,31 @@
 <script setup lang="ts">
 import { useMemberStore } from '@/stores/modules/member'
+import { http } from '@/utils/http'
 
 const store = useMemberStore()
 const click = () => {
   store.setProfile({ name: 'zs', age: 18 })
+}
+
+const onGet = async () => {
+  // uni.request({
+  //   url: '/home/banner',
+  //   method: 'GET',
+  //   data: {
+  //     distributionSite: 1,
+  //   },
+  //   success: (res) => {
+  //     console.log(res)
+  //   },
+  // })
+  const res = await http({
+    url: '/home/banner',
+    method: 'GET',
+    data: {
+      distributionSite: 1,
+    },
+  })
+  console.log(res)
 }
 </script>
 
@@ -23,6 +45,7 @@ const click = () => {
   </view>
   <view>{{ store.profile }}</view>
   <button @tap="click">click</button>
+  <button @tap="onGet" type="primary">click</button>
 </template>
 
 <style lang="scss">
