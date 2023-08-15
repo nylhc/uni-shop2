@@ -218,7 +218,7 @@
 
 <script setup lang="ts"></script>
 
-<style>
+<style scoped>
 .sk-transparent {
   color: transparent !important;
 }
