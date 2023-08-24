@@ -7,9 +7,11 @@ import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
 import PageSkeleton from './components/PageSkeleton.vue'
 import type {
+  SkuPopupEvent,
   SkuPopupInstanceType,
   SkuPopupLocaldata,
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
+import { postMemberCartAPI } from '@/services/cart'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -105,6 +107,13 @@ const skuPopupRef = ref<SkuPopupInstanceType>()
 const selectArrText = computed(() => {
   return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
 })
+
+// 加入购物车事件
+const onAddCart = async (ev: SkuPopupEvent) => {
+  await postMemberCartAPI({ skuId: ev._id, count: ev.buy_num })
+  uni.showToast({ title: '添加成功' })
+  isShowSku.value = false
+}
 </script>
 
 <template>
@@ -218,9 +227,13 @@ const selectArrText = computed(() => {
       <button class="icons-button" open-type="contact">
         <text class="icon-handset"></text>客服
       </button>
-      <navigator class="icons-button"
-        ><text class="icon-cart"></text>购物车</navigator
+      <navigator
+        class="icons-button"
+        url="/pages/cart/cart2"
+        open-type="navigate"
       >
+        <text class="icon-cart"></text>购物车
+      </navigator>
     </view>
     <view class="buttons">
       <!-- 显示一个按钮 -->
@@ -239,6 +252,7 @@ const selectArrText = computed(() => {
     add-cart-background-color="#FFA868"
     buy-now-background-color="#27BA9B"
     ref="skuPopupRef"
+    @add-cart="onAddCart"
     :actived-style="{
       color: '#27BA9B',
       borderColor: '#27BA9B',
